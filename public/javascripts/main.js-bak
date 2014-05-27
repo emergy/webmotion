@@ -1,0 +1,100 @@
+var offset = 0;
+var limit = 5;
+var busy = 0;
+
+function get_events(offset, limit) {
+    // get query
+    var r = false;
+
+    $.ajax({
+        async: false,
+        cache: false,
+        type: "GET",
+        url: "/events",
+        data: "offset=" + offset + "&limit=" + limit,
+        success: function(data, status) {
+            if (status == "success") {
+                r = data;
+
+                /*/ push new URL to address bar
+                if (offset === 0) {
+                    var pageurl = "/sphinxsearch?q=" + query;
+                    window.history.pushState({path:pageurl},'',pageurl);
+                }*/
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest: " + XMLHttpRequest);
+            console.log("textStatus: " + textStatus);
+            console.log("errorThrown: " + errorThrown);
+        }
+    });
+
+    return r;
+}
+
+
+
+
+// load next content for page scroll
+function nextContent() {
+    if (busy === 0) {
+        busy = 1;
+        var data = get_events(offset, offset + limit);
+        if (data == "Ничего не найдено") { return; }
+        $("#events").html($("#events").html()+" "+data);
+
+        offset += 5;
+        busy = 0;
+    }
+}
+
+
+
+$(document).ready(function() {
+    $('#buttonLogin').click(function() {
+        var login = $('#inputLogin').val();
+        var password = hex_md5($('#inputPassword').val());
+
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            data: "login=" + login + "&password=" + password,
+            success: function(msg) {
+                console.log(msg);
+                if (msg == '0') {
+                    $('#login-error').show();
+                } else {
+                    $('#login-error').hide();
+                    window.location.replace('/');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("XMLHttpRequest: " + XMLHttpRequest);
+                console.log("textStatus: " + textStatus);
+                console.log("errorThrown: " + errorThrown);
+            }
+        });
+    });
+
+
+
+    $(".form-control").keypress(function(e) {
+        if (e.which == 13) {
+            $('#buttonLogin').click();
+        }
+    });
+
+
+    
+/*
+    // load content on scroll
+    var that = this;
+    $(window).scroll(function() {
+        if ($(document).height() - $(window).height() <= $(window).scrollTop() + 250) {
+            //that.scrollPosition = $(window).scrollTop();
+            nextContent();
+        }
+    });
+*/
+});

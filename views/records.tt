@@ -1,0 +1,65 @@
+<script type="text/javascript">/* <![CDATA[ */
+    document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/scroll.js"><\/script>')
+/* ]]> */</script>
+<% nav %>
+<div id="events">
+  <table class="table table-hover fixed">
+  <tr class="active">
+    <td class="tt">
+      &nbsp;&nbsp;Date
+    </td>  
+    <td>
+      &nbsp;&nbsp;Video
+    </td>  
+    <td>
+<div id="date-range" class="pull-right">
+    <i class="fa fa-calendar fa-lg"></i>
+    <span>Select date range</span> <b class="caret"></b>
+</div>
+    </td>
+  </tr>
+  </table>
+  <div id="push-content"></div>
+</div>
+<script type="text/javascript">/* <![CDATA[ */
+    $('#date-range').daterangepicker(
+        {
+          ranges: {
+             'Today': [moment(), moment()],
+             'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+             'Last 7 Days': [moment().subtract('days', 6), moment()],
+             'Last 30 Days': [moment().subtract('days', 29), moment()],
+             'This Month': [moment().startOf('month'), moment().endOf('month')],
+             'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+          },
+          format: 'MMMM D, YYYY',
+          startDate: moment().subtract('days', 29),
+          endDate: moment()
+        },
+        function(start, end) {
+            location.search = '?max=' + end.toISOString() + '&min=' + start.toISOString();
+            /*
+            $('#date-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            window.history.pushState('', '', '/events?max=' + end.toISOString() + '&min=' + start.toISOString());
+            $('#push-content').html('');
+            setScroll();
+            */
+        }
+    );
+/* ]]> */</script>
+
+<script id="template-record" type="text/x-jquery-tmpl">
+  <table class="table table-hover">
+  <tr>
+    <td class="tt">
+      &nbsp;&nbsp;${event_timestamp}
+    </td>
+    <td>
+      <video width="${width}" height="${height}" controls>
+        <source class="media-object" src="/record/${filename}" type="video/ogg">
+        Your browser does not support the video tag.
+      </video>
+    </td>
+  </tr>
+  </table>
+</script>

@@ -1,0 +1,65 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          webmotion
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Motion Web interface
+# Description:       Motion Web interface
+#                    placed in /etc/init.d.
+### END INIT INFO
+
+# Author: Alex Emergy <alex.emergy@gmail.com>
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Motion Web interface"
+NAME=webmotion
+WORK_DIR="/opt/webmotion"
+SOCKET="$WORK_DIR/var/webmotion.sock"
+BIN_FILE="$WORK_DIR/bin/app.pl"
+WORKERS="5"
+ENVIRONMENT="deployment"
+DAEMON=/usr/bin/plackup
+DAEMON_ARGS="-E $ENVIRONMENT -s Starman --workers=$WORKERS -l $SOCKET -a $BIN_FILE"
+SCRIPTNAME=/etc/init.d/$NAME
+USER="www-data"
+LOGFILE="/var/log/plackup.log"
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+function _status () {
+    ps -Af|grep "$SOCKET"|grep -v grep|awk '{printf $2}'
+}
+
+
+case "$1" in
+  start)
+	sudo -u $USER $DAEMON $DAEMON_ARGS 2>&1 > $LOGFILE &
+	;;
+  stop)
+	PID=`_status`
+	[ -z $PID ] || kill $PID
+	;;
+  status)
+	PID=`_status`
+	if [ -z "$PID" ]; then
+		echo "Is not running"
+	else
+		echo "Is running! PID: $PID"
+	fi
+	;;
+  restart)
+	$0 stop
+	sleep 3
+	$0 start
+	;;
+  *)
+	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+	exit 3
+	;;
+esac
+
+:

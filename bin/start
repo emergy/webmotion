@@ -1,0 +1,2 @@
+#!/bin/sh
+plackup -E deployment -s Starman --workers=50 -p 3000 -a bin/app.pl

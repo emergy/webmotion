@@ -1,0 +1,4 @@
+<% nav %>
+<div id="events">
+  <img src="<% live_url %>" width="<% embed_width %>" height="<% embed_height %>"/>
+</div>

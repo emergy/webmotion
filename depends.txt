@@ -1,0 +1,6 @@
+libdancer-perl
+libdancer-plugin-database-perl
+libdancer-session-cookie-perl
+libfcgi-procmanager-perl
+starman
+libjson-perl
