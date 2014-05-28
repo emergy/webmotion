@@ -1,5 +1,6 @@
 <script type="text/javascript">/* <![CDATA[ */
-    document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+    document.write('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">');
+    document.write('<meta name="apple-mobile-web-app-capable" content="yes" />');
 </script>
 <div id="events" class="service">
 <button type="button" id="start-button" class="btn btn-success btn-lg" disabled="disabled">Start service</button>
@@ -9,14 +10,40 @@
 <button type="button" id="stop-button" class="btn btn-danger btn-lg" disabled="disabled">Stop service</button>
 </div>
 <script type="text/javascript">/* <![CDATA[ */
+    update_status();
+
     $('#start-button').click(function() {
-        $.ajax('/on');
+        $('#start-button').attr("disabled", "disabled");
+        $.ajax('/on', {
+            success: function(msg) {
+                update_status();
+            }
+        });
     });
 
     $('#stop-button').click(function() {
-        $.ajax('/off');
+        $('#stop-button').attr("disabled", "disabled");
+        $.ajax('/off', {
+            success: function(msg) {
+                update_status();
+            }
+        });
     });
 
+    function update_status() {
+        $.ajax('/status', {
+            success: function(msg) {
+                if (msg == '1') {
+                    $('#stop-button').removeAttr("disabled");
+                    $('#start-button').attr("disabled", "disabled");
+                } else {
+                    $('#start-button').removeAttr("disabled");
+                    $('#stop-button').attr("disabled", "disabled");
+                }
+            }
+        });
+    }
+/*
     var timerId = setInterval(function() {
         $.ajax('/status', {
             success: function(msg) {
@@ -30,4 +57,5 @@
             }
         });
     }, 500);
+*/
 /* ]]> */</script>
