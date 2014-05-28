@@ -19,6 +19,9 @@ my $motion_records_dir = config->{motion_records_dir};
 my $public_dir = "public";
 my $app_records_dir = "records";
 
+my $themes = get_themes();
+Debug("\$themes: ", $themes);
+
 hook 'before' => sub {
     if (session('user') && request->path_info =~ m{^/logout}) {
         Debug("Logout");
@@ -43,11 +46,16 @@ get '/' => sub {
 
 get '/service' => sub {
     to_log('service', 'open service page');
-    return 'service';
+
+    template 'service', { 
+        theme => get_theme(),
+        nav => template 'nav', {}, { layout => undef },
+    };
 };
         
 get '/events' => sub {
     template 'records', { 
+        theme => get_theme(),
         nav => template 'nav', {}, { layout => undef },
     };
 };
@@ -103,7 +111,9 @@ get '/logout' => sub {
 };
 
 get '/login' => sub {
-    template 'login';
+    template 'login', {
+        theme => get_theme(),
+    };
 };
 
 post '/login' => sub {
@@ -140,6 +150,7 @@ get '/camera/:camera' => sub {
     to_log('camera', 'open camera ' . $camera);
 
     template 'camera', {
+        theme => get_theme(),
         embed_width => config->{embed_width},
         embed_height => config->{embed_height},
         live_url => "/live/$camera",
@@ -203,6 +214,36 @@ sub to_log {
         type => $type,
         text => $text,
     });
+}
+
+sub get_themes {
+    my $themes_sth = database->prepare('SELECT * from themes');
+    $themes_sth->execute() or die "Can't get themes: $!\n";
+    
+    my $themes_list;
+    while (my $res = $themes_sth->fetchrow_hashref) {
+        $themes_list->{$res->{id}} = {
+            name => $res->{name},
+            filename => $res->{filename},
+        }
+    }
+
+    return $themes_list;
+}
+
+sub get_theme {
+    if (session('user')) {
+        Debug('session(\'user\')', session('user'));
+        if (session('user')->{'theme'}) {
+            my $id = session('user')->{'theme'};
+
+            Debug('My theme: ', $themes->{$id}->{filename});
+            return $themes->{$id}->{filename};
+        }
+    }
+
+    Debug('My theme: ', $themes->{1}->{filename});
+    return $themes->{1}->{filename};
 }
 
 true;
