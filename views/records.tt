@@ -12,16 +12,22 @@
       &nbsp;&nbsp;Video
     </td>  
     <td>
-<div id="date-range" class="pull-right">
-    <i class="fa fa-calendar fa-lg"></i>
-    <span>Select date range</span> <b class="caret"></b>
-</div>
+    <div id="date-range" class="pull-right">
+        <i class="fa fa-calendar fa-lg"></i>
+        <span>Select date range</span> <b class="caret"></b>
+    </div>
     </td>
   </tr>
   </table>
   <div id="push-content"></div>
 </div>
 <script type="text/javascript">/* <![CDATA[ */
+    if (params.min && params.max) {
+        var min = moment(params.min).format('MMMM D, YYYY');
+        var max = moment(params.max).format('MMMM D, YYYY');
+        $('#date-range span').html(min + ' - ' + max);
+    }
+
     $('#date-range').daterangepicker(
         {
           ranges: {
