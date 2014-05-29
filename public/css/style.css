@@ -293,7 +293,7 @@ body {
 #main-nav-bar {
     position:fixed;
     top: 30px;
-    left: 20px;
+    left: 40px;
 }
 
 .tt {
@@ -301,12 +301,7 @@ body {
 }
 
 div.service {
-/*
-    position:absolute;
-    margin: auto;
-*/
   max-width: 700px;
-  background:white;
   padding: 30px 50px;
   margin: 60px auto;
   text-align: center;

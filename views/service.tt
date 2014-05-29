@@ -1,7 +1,4 @@
-<script type="text/javascript">/* <![CDATA[ */
-    document.write('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">');
-    document.write('<meta name="apple-mobile-web-app-capable" content="yes" />');
-</script>
+<div id="push-nav" style="display:none;"><% nav %></div>
 <div id="events" class="service">
 <button type="button" id="start-button" class="btn btn-success btn-lg" disabled="disabled">Start service</button>
 <br/>
@@ -10,6 +7,15 @@
 <button type="button" id="stop-button" class="btn btn-danger btn-lg" disabled="disabled">Stop service</button>
 </div>
 <script type="text/javascript">/* <![CDATA[ */
+    var re = new RegExp('iPhone');
+
+    if (! navigator.userAgent.match(re)) {
+        $('#push-nav').show();
+    } else {
+        document.write('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">');
+        document.write('<meta name="apple-mobile-web-app-capable" content="yes" />');
+    }
+
     update_status();
 
     $('#start-button').click(function() {
@@ -33,6 +39,7 @@
     function update_status() {
         $.ajax('/status', {
             success: function(msg) {
+                console.log(msg);
                 if (msg == '1') {
                     $('#stop-button').removeAttr("disabled");
                     $('#start-button').attr("disabled", "disabled");
@@ -43,19 +50,4 @@
             }
         });
     }
-/*
-    var timerId = setInterval(function() {
-        $.ajax('/status', {
-            success: function(msg) {
-                if (msg == '1') {
-                    $('#stop-button').removeAttr("disabled");
-                    $('#start-button').attr("disabled", "disabled");
-                } else {
-                    $('#start-button').removeAttr("disabled");
-                    $('#stop-button').attr("disabled", "disabled");
-                }
-            }
-        });
-    }, 500);
-*/
 /* ]]> */</script>
