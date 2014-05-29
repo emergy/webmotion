@@ -8,7 +8,7 @@ use IO::Socket;
 use Dancer::Handler::PSGI;
 use HTML::Entities;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 our $DEBUG = config->{DEBUG};
 
 my $FILE_TYPE_JPEG = 1;
