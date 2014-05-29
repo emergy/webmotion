@@ -23,6 +23,7 @@ my $themes = get_themes();
 Debug("\$themes: ", $themes);
 
 hook 'before' => sub {
+    Debug("session('user')", session('user'));
     if (session('user') && request->path_info =~ m{^/logout}) {
         Debug("Logout");
     } elsif (! session('user') && request->path_info !~ m{^/login}) {
@@ -46,10 +47,15 @@ get '/' => sub {
 
 get '/service' => sub {
     to_log('service', 'open service page');
+    my $nav = '';
+
+    if (session('user')->{role} ne 'service') {
+        $nav = template 'nav', {}, { layout => undef }
+    }
 
     template 'service', { 
         theme => get_theme(),
-        nav => template 'nav', {}, { layout => undef },
+        nav => $nav,
     };
 };
         

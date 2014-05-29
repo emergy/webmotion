@@ -28,9 +28,10 @@ template: "simple"
 
 DEBUG: 0
 
-#session: Simple
 session: "cookie"
 session_cookie_key: "12345678901234567890"
+#session: "memcached"
+#memcached_servers: "127.0.0.1:11211"
 
 motion_pidfile: 
 
