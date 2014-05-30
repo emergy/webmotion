@@ -23,7 +23,7 @@ my $themes = get_themes();
 Debug("\$themes: ", $themes);
 
 hook 'before' => sub {
-    Debug("session('user')", session('user'));
+    Debug("session('user')", session);
     if (session('user') && request->path_info =~ m{^/logout}) {
         Debug("Logout");
     } elsif (! session('user') && request->path_info !~ m{^/login}) {
@@ -60,7 +60,7 @@ get '/service' => sub {
 };
         
 get '/events' => sub {
-    template 'records', { 
+    template 'events', { 
         theme => get_theme(),
         nav => template 'nav', {}, { layout => undef },
     };
