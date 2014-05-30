@@ -306,3 +306,8 @@ div.service {
   margin: 60px auto;
   text-align: center;
 }
+
+span#user-string {
+    padding: 30px 50px;
+    margin: 60px auto;
+}

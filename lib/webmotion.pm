@@ -50,7 +50,7 @@ get '/service' => sub {
     my $nav = '';
 
     if (session('user')->{role} ne 'service') {
-        $nav = template 'nav', {}, { layout => undef }
+        $nav = template 'nav', { username => get_username() }, { layout => undef }
     }
 
     template 'service', { 
@@ -62,7 +62,7 @@ get '/service' => sub {
 get '/events' => sub {
     template 'events', { 
         theme => get_theme(),
-        nav => template 'nav', {}, { layout => undef },
+        nav => template 'nav', { username => get_username() }, { layout => undef },
     };
 };
 
@@ -160,7 +160,7 @@ get '/camera/:camera' => sub {
         embed_width => config->{embed_width},
         embed_height => config->{embed_height},
         live_url => "/live/$camera",
-        nav => template 'nav', {}, { layout => undef },
+        nav => template 'nav', { username => get_username() }, { layout => undef },
     };
 };
 
@@ -250,6 +250,12 @@ sub get_theme {
 
     Debug('My theme: ', $themes->{1}->{filename});
     return $themes->{1}->{filename};
+}
+
+sub get_username {
+    my $name = session('user')->{name};
+    $name =~ s/(.*)/\u$1/;
+    return $name;
 }
 
 true;

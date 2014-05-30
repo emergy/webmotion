@@ -1,10 +1,3 @@
-var re = new RegExp('iPhone');
-
-if (navigator.userAgent.match(re)) {
-    document.write('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">');
-    document.write('<meta name="apple-mobile-web-app-capable" content="yes" />');
-}
-
 $('#start-button').click(function() {
     $('#start-button').attr("disabled", "disabled");
     $.ajax('/on', {
