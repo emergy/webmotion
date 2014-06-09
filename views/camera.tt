@@ -1,4 +1,51 @@
 <% nav %>
 <div id="events">
-  <img src="<% live_url %>" width="<% embed_width %>" height="<% embed_height %>"/>
+<div id="tabs"></div>
+<div class="camera-name">
+<h3><% camera_name %></h3>
 </div>
+<div id="camera">
+<img src="/live/<% camera %>" width="<% embed_width %>" height="<% embed_height %>"/>
+</div>
+</div>
+<script type="text/javascript"> /* <![CDATA[ */
+$( document ).ready(function() {
+    function interactive_label() {
+        $('div.camera-name h3').click(function() {
+
+            var camera = $('div.camera-name h3').text();
+            $('.camera-name').html('<input id="name-input" type="text" class="form-control" value="' + camera + '" style="max-width: <% embed_width %>px;">');
+
+            $('#name-input').blur(function() {
+                $('.camera-name').html('<h3>' + camera + '</h3>');
+                interactive_label();
+            });
+
+            $('#name-input').keypress(function(e) {
+                if (e.which == 13) {
+                    var name = $('#name-input').val();
+                    if (name.length > 0) {
+                        $.ajax('/set-camera-name', {
+                            type:   "POST",
+                            data:   "camera=<% camera %>&name=" + name,
+                            success: function(msg) {
+                                if (msg == "1") {
+                                    $('.camera-name').html('<h3>' + name + '</h3>');
+                                    interactive_label();
+                                } else {
+                                    alert("Can't set camera name: " + msg);
+                                }
+                            }
+                        });
+                    } else {
+                        alert("Error: Camera name value is null");
+                    }
+                }
+            });
+
+        });
+    }
+
+    interactive_label();
+});
+/* ]]> */ </script>

@@ -145,13 +145,22 @@ post '/login' => sub {
 };
 
 get '/live/:camera' => sub {
-    header 'X-Accel-Redirect' => '/live-protected/' . params->{camera};
+    header 'X-Accel-Redirect' => '/live-protected/' . (params->{camera} - 1);
 };
 
-get '/camera' => sub { redirect '/camera/0' };
+get '/camera' => sub { redirect '/camera/1' };
 
 get '/camera/:camera' => sub {
-    my $camera = params->{camera} ||= 0;
+    my $camera = params->{camera} ||= 1;
+
+    my $st = database->prepare('SELECT * FROM cameras WHERE id = ?');
+    $st->execute($camera) or die "Can't execute camera name query: $!\n";
+
+    my $camera_name = "Camera $camera";
+
+    while (my $res = $st->fetchrow_hashref) {
+        $camera_name = $res->{name};
+    }
 
     to_log('camera', 'open camera ' . $camera);
 
@@ -159,9 +168,28 @@ get '/camera/:camera' => sub {
         theme => get_theme(),
         embed_width => config->{embed_width},
         embed_height => config->{embed_height},
-        live_url => "/live/$camera",
+        camera_name => $camera_name,
+        camera => $camera,
         nav => template 'nav', {}, { layout => undef },
     };
+};
+
+post '/set-camera-name' => sub {
+    use utf8;
+    my $camera = params->{camera};
+    my $name = params->{name};
+
+    $name =~ s/^\s*(.*?)\s*$/$1/;
+    return 0 unless $name;
+
+    Debug('camera $name', $name);
+
+    my $st = database->prepare('INSERT INTO cameras (id,name) VALUES (?,?) ' .
+                                'ON DUPLICATE KEY UPDATE name=?'
+    );
+
+    $st->execute($camera, $name, $name) or return 0;
+    return 1;
 };
 
 get '/on' => sub {

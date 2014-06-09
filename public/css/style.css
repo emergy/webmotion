@@ -306,3 +306,11 @@ div.service {
   margin: 60px auto;
   text-align: center;
 }
+
+#camera {
+    margin: 15px 100px;
+}
+
+.camera-name {
+    margin: 20px 100px;
+}

@@ -58,7 +58,6 @@
 						    
 						// Добавление полученных данных в DIV content
                         var dataItems = data;
-                        console.log(dataItems);
                         //$.tmpl('#template-record').appendTo('.content');
                         $('#template-record').tmpl(dataItems).appendTo('#push-content');
 						
