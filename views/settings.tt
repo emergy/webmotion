@@ -1,0 +1,16 @@
+<% nav %>
+<div id="settings-page"></div>
+<script id="profile-page-tmpl" type="text/x-jquery-tmpl">
+<label>Username</label>
+<select name="username" id="username" class="input-xlarge">
+{{each users_list}}
+<option value="${name}">${name}</option>
+{{/each}}
+</select>
+<button class="btn btn-primary">Update</button>
+</script>
+<script type="text/javascript">/* <![CDATA[ */
+    add_scripts([
+        'settings.js'
+    ], '<% request.uri_base %>');
+/* ]]> */</script>

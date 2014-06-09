@@ -15,9 +15,6 @@ if (navigator.userAgent.match(re)) {
 <button type="button" id="stop-button" class="btn btn-danger btn-lg" disabled="disabled">Stop service</button>
 </div>
 <script type="text/javascript">/* <![CDATA[ */
-    
-/* ]]> */</script>
-<script type="text/javascript">/* <![CDATA[ */
     add_scripts([
         'service.js'
     ], '<% request.uri_base %>');

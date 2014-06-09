@@ -3,6 +3,7 @@
   <li><a class="menu-item" href="/events">Events</a></li>
   <li><a class="menu-item" href="/camera">Camera</a></li>
   <li><a class="menu-item" href="/service">Control</a></li>
+  <li><a class="menu-item" href="/settings">Settings</a></li>
   <li><a class="menu-item" href="/logout">Logout</a></li>
 </ul>
 </div>

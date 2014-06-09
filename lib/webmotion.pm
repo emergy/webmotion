@@ -189,6 +189,20 @@ get '/status' => sub {
     return $status;
 };
 
+get '/settings' => sub {
+    template 'settings' => {
+        nav => template 'nav', { username => get_username() }, { layout => undef },
+    };
+};
+
+get '/get-user-list' => sub {
+    content_type 'application/json';
+    my $sth = database->prepare('SELECT * from users');
+    $sth->execute() or die "Can't get user list: $!\n";
+    return $sth->fetchrow_arrayref;
+    
+};
+
 sub Debug {
     my ($title, $content) = @_;
 
