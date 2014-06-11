@@ -16,6 +16,8 @@ $( document ).ready(function() {
             var camera = $('div.camera-name h3').text();
             $('.camera-name').html('<input id="name-input" type="text" class="form-control" value="' + camera + '" style="max-width: <% embed_width %>px;">');
 
+            $('#name-input').focus();
+
             $('#name-input').blur(function() {
                 $('.camera-name').html('<h3>' + camera + '</h3>');
                 interactive_label();
